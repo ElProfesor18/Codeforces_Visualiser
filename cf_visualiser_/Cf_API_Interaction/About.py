@@ -1,41 +1,70 @@
 import requests
 from pandas import json_normalize
 
-Handle = 'ElProfesor._.'
-url = 'https://codeforces.com/api/user.info?handles=' + Handle
+def about(handle):
 
-r = requests.get(url)
-dictr = r.json()
+    Handle = handle
+    url = 'https://codeforces.com/api/user.info?handles=' + Handle
 
-# print(dictr)
+    r = requests.get(url)
+    dictr = r.json()
 
-if(dictr['status'] == "OK"):
-    tdict = json_normalize(dictr['result'])
-    # print(temp.keys())
+    # print(dictr)
 
-    temp = {}
+    if(dictr['status'] == "OK"):
+        tdict = json_normalize(dictr['result'])
+        # print(temp.keys())
 
-    for k in tdict.keys():
-        if k!= 'organization':
-            temp.update({k : str(tdict[k][0]).capitalize()})
-        else:
-            temp.update({k : str(tdict[k][0])})
+        temp = {}
 
-    result = {}
+        for k in tdict.keys():
+            if k!= 'organization':
+                temp.update({k : str(tdict[k][0]).capitalize()})
+            else:
+                temp.update({k : str(tdict[k][0])})
 
-    Name = temp['firstName'] + ' ' + temp['lastName']
-    Location = temp['city'] + ', ' + temp['country']
-    Affiliation = 'From ' + temp['organization']
-    rank = temp['rank']
-    maxRank = temp['maxRank']
-    rating = temp['rating']
-    maxRating = temp['maxRating']
+        result = {}
 
-    result['rank'] = rank
-    result['handle'] = Handle
-    result['Name'] = Name
-    result['Location'] = Location
-    result['Affiliation'] = Affiliation
-    result['ContestRating'] = 'Contest Rating: ' + rating + ' (max. ' + maxRank + ', ' + maxRating + ')'
+        if 'firstName' not in temp.keys():
+            temp['firstName'] = 'NA'
 
-    print(result)
+        if 'lastName' not in temp.keys():
+            temp['lastName'] = 'NA'
+        
+        if 'city' not in temp.keys():
+            temp['city'] = 'NA'
+
+        if 'country' not in temp.keys():
+            temp['country'] = 'NA'
+        
+        if 'organization' not in temp.keys():
+            temp['organization'] = 'NA'
+        
+        if 'rank' not in temp.keys():
+            temp['rank'] = 'NA'
+
+        if 'maxRank' not in temp.keys():
+            temp['maxRank'] = 'NA'
+
+        if 'rating' not in temp.keys():
+            temp['rating'] = 'NA'
+
+        if 'maxRating' not in temp.keys():
+            temp['maxRating'] = 'NA'
+        
+        Name = temp['firstName'] + ' ' + temp['lastName']
+        Location = temp['city'] + ', ' + temp['country']
+        Affiliation = 'From ' + temp['organization']
+        rank = temp['rank']
+        maxRank = temp['maxRank']
+        rating = temp['rating']
+        maxRating = temp['maxRating']
+
+        result['rank'] = rank
+        result['handle'] = Handle
+        result['Name'] = Name
+        result['Location'] = Location
+        result['Affiliation'] = Affiliation
+        result['ContestRating'] = 'Contest Rating: ' + rating + ' (max. ' + maxRank + ', ' + maxRating + ')'
+
+        return result

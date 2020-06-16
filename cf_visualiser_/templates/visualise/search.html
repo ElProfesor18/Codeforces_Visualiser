@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    CF-Vis | Search
+{% endblock %}
+
+{% block content %}
+    
+    <form method='POST' action = '/search/'>
+        {% csrf_token %}
+        {{form}}
+        <button type='submit', name='save'>
+            Search.
+        </button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>About</h3>
+Rank: {{about.rank}}
+<br>
+
+Handle: {{about.handle}}
+<br>
+
+Name: {{about.Name}}
+<br>
+
+Location: {{about.Location}}
+<br>
+
+Affil.: {{about.Affiliation}}
+<br>
+
+{{about.ContestRating}}
+<br>
+
+<h3>Contest Stats</h3>
+Number of Contests: {{contest_stats.NoOfContests}}
+<br>
+
+Best Rank: {{contest_stats.BestRank.0}} ({{contest_stats.BestRank.1}})
+<br>
+
+Worst Rank: {{contest_stats.WorstRank.0}} ({{contest_stats.WorstRank.1}})
+<br>
+
+Max. Up: {{contest_stats.MaxUp.0}} ({{contest_stats.MaxUp.1}})
+<br>
+
+Max. Down: {{contest_stats.MaxDown.0}} ({{contest_stats.MaxDown.1}})
+<br>
+
+<h3>Contest Stats</h3>
+Tried : {{problem_stats.Tried}}
+<br>
+
+Solved : {{problem_stats.Solved}}
+<br>
+
+Tried : {{problem_stats.Tried}}
+<br>
+
+Max Attempts :  {{problem_stats.Max_Attempts.1}} ({{problem_stats.Max_Attempts.0.0}}-{{problem_stats.Max_Attempts.0.1}}) 
+<br>
+
+Max AC(s) :  {{problem_stats.Max_AC.1}} ({{problem_stats.Max_AC.0.0}}-{{problem_stats.Max_AC.0.1}})
+<br>
+
+<h3>Unsolved</h3>
+{% for item in problem_stats.Unsolved %} 
+    <a href="https://codeforces.com/problemset/problem/{{item.0}}/{{item.1}}">{{item.0}}-{{item.1}}</a>,
+{% endfor %}
+<br>
+
+<div id="tags_chart">{{ output_tags|safe }}</div>
+<br>
+
+<div id="verdicts_chart">{{ output_verdicts|safe }}</div>
+<br>
+
+<div id="languages_chart">{{ output_languages|safe }}</div>
+<br>
+
+<div id="problem_ratings_chart">{{ output_problem_ratings|safe }}</div>
+<br>
+
+<div id="levels_chart">{{ output_levels|safe }}</div>
+<br>
+
+{% endblock %}
