@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+CF-Vis | Compare
+{% endblock %}
+
+{% block content %}
+    
+    <form method='POST' action = '/compare/'>
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type='submit', name='save'>
+            Compare.
+        </button>
+    </form>
+
+{% endblock %}

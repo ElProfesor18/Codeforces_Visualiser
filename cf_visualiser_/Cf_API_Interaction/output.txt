@@ -1,0 +1,3 @@
+Index(['id', 'name', 'type', 'phase', 'frozen', 'durationSeconds',
+       'startTimeSeconds', 'relativeTimeSeconds'],
+      dtype='object')

@@ -8,9 +8,11 @@ from Cf_API_Interaction.Problem_Stats import *
 from .forms import search_handle
 
 from collections import OrderedDict
+
 # Include the `fusioncharts.py` file that contains functions to embed the charts.
 from .import fusioncharts
 from .auxilliary import *
+from .TimeTable import *
 
 # Create your views here.
 def search(request):
@@ -44,3 +46,10 @@ def show(request, handle):
     content['output_tags'] = get_tags(content, handle).render()
 
     return render(request, 'visualise/show.html', content) 
+
+def time_table(request):
+    fcd = fetch_time_table()
+    
+    print(fcd)
+
+    return render(request, "visualise/timetable.html", {"cols" : fcd})

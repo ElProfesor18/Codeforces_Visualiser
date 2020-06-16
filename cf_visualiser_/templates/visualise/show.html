@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block title %}
+CF-Vis | Stats
+{% endblock %}
+
 {% block content %}
 <h3>About</h3>
 Rank: {{about.rank}}
@@ -36,14 +40,11 @@ Max. Up: {{contest_stats.MaxUp.0}} ({{contest_stats.MaxUp.1}})
 Max. Down: {{contest_stats.MaxDown.0}} ({{contest_stats.MaxDown.1}})
 <br>
 
-<h3>Contest Stats</h3>
+<h3>Problem Stats</h3>
 Tried : {{problem_stats.Tried}}
 <br>
 
 Solved : {{problem_stats.Solved}}
-<br>
-
-Tried : {{problem_stats.Tried}}
 <br>
 
 Max Attempts :  {{problem_stats.Max_Attempts.1}} ({{problem_stats.Max_Attempts.0.0}}-{{problem_stats.Max_Attempts.0.1}}) 

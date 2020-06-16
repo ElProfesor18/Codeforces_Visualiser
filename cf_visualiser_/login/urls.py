@@ -1,8 +1,11 @@
-from django.contrib import admin
+from django.conf.urls import url, include
 from django.urls import path
-from . import views
+from login import views
 
-urlpatterns = [
-    path('home/', views.index, name='index'),
+# SET THE NAMESPACE!
+app_name = 'login'
+
+urlpatterns=[
+    path('register/',views.register, name='register'),
+    path('user_login/',views.user_login, name='user_login'),
 ]
- 
