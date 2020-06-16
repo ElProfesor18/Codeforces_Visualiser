@@ -1,9 +1,45 @@
 {% extends 'base.html' %}
 
 {% block title %}
-CF-Vis | Stats
+CF-Vis | Compare
 {% endblock %}
 
 {% block content %}
+
+<div id="contests_chart">{{ output_contests|safe }}</div>
+<br>
+
+<div id="unsolved_chart">{{ output_unsolved|safe }}</div>
+<br>
+
+<div id="max_submission_chart">{{ output_max_submission|safe }}</div>
+<br>
+
+<div id="max_ac_chart">{{ output_max_ac|safe }}</div>
+<br>
+
+    <h1>Common Contests</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>Contest Name&nbsp;</td>
+                <td>&nbsp;{{ handle1 }}&nbsp;</td>
+                <td>&nbsp;{{ handle2 }}&nbsp;</td>
+                <td>&nbsp; Difference &nbsp;</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for value in result  %}
+            <tr>
+                <td><a href="https://codeforces.com/contest/{{value.0}}">{{value.1}}&nbsp;</a></td>
+                <td>&nbsp;{{ value.2 }}&nbsp;</td>
+                <td>&nbsp;{{ value.3 }}&nbsp;</td>
+                <td>&nbsp;{{ value.4 }}&nbsp;</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
 
 {% endblock %}

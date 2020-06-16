@@ -53,3 +53,5 @@ def time_table(request):
     print(fcd)
 
     return render(request, "visualise/timetable.html", {"cols" : fcd})
+
+     

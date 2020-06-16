@@ -5,6 +5,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
+from .forms import contactUs
+from .models import enquiry
+
 def index(request):
     return render(request,'login/index.html')
 
@@ -62,4 +65,23 @@ def user_login(request):
         return render(request, 'login/login.html', {})
 
 def contact_us(request):
-    return render(request, 'login/contact_us.html')
+    
+    if request.method == 'POST':
+        form = contactUs(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            copy = form.cleaned_data['copy']
+
+            t = enquiry(name=name, email=email, subject=subject, message=message, copy=copy)
+            t.save()
+
+            return index(request)
+
+    else:
+        form = contactUs()
+
+    return render(request, 'login/contact_us.html', {'form' : form})
