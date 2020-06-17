@@ -25,7 +25,7 @@ def problem_stats(handle):
 
     if(dictr['status'] == "OK"):
         tdict = json_normalize(dictr['result'])
-        # print(tdict.keys())
+
 
         result = {}
 

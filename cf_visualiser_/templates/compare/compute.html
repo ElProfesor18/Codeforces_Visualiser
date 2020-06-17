@@ -6,8 +6,34 @@ CF-Vis | Compare
 
 {% block content %}
 
+<div id="rating_stats_chart">{{ output_rating_stats|safe }}</div>
+<br>
+
 <div id="contests_chart">{{ output_contests|safe }}</div>
 <br>
+
+<table>
+    <thead>
+        <tr>
+            <td>Worst and Best&nbsp;</td>
+            <td>&nbsp;{{ handle1 }}&nbsp;</td>
+            <td>&nbsp;{{ handle2 }}&nbsp;</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>&nbsp;Best&nbsp;</td>
+            <td>&nbsp;{{ my_dict3.BestRank }}&nbsp;</td>
+            <td>&nbsp;{{ my_dict4.BestRank}}&nbsp;</td>
+        </tr>
+
+        <tr>
+            <td>&nbsp;Worst&nbsp;</td>
+            <td>&nbsp;{{ my_dict3.WorstRank }}&nbsp;</td>
+            <td>&nbsp;{{ my_dict4.WorstRank}}&nbsp;</td>
+        </tr>
+    </tbody>
+</table>
 
 <div id="unsolved_chart">{{ output_unsolved|safe }}</div>
 <br>
@@ -16,6 +42,17 @@ CF-Vis | Compare
 <br>
 
 <div id="max_ac_chart">{{ output_max_ac|safe }}</div>
+<br>
+
+<h4>Common Problems Solved: {{common_problems_solved}}</h4>
+
+<div id="levels_stats_chart">{{ output_levels|safe }}</div>
+<br>
+
+<div id="problem_ratings_stats_chart">{{ output_problem_ratings|safe }}</div>
+<br>
+
+<div id="tags_stats_chart">{{ output_tags|safe }}</div>
 <br>
 
     <h1>Common Contests</h1>

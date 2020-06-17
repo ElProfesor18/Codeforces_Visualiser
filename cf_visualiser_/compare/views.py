@@ -38,9 +38,6 @@ def compute(request, handles):
     handle1 = handles[0]
     handle2 = handles[1]
 
-    print(handle1)
-    print(handle2)
-
     content = {}
 
     content['output_contests'] = get_contests(handle1, handle2).render()
@@ -54,10 +51,7 @@ def compute(request, handles):
 
     res = get_common_contests(handle1, handle2)
 
-    content['output_rating_stats'] = get_rating_stats(handle1, handle2)
-    
-    print("###")
-    print(content['output_rating_stats'])
+    my_dict3, my_dict4 = get_rating_stats(handle1, handle2)
     
     result = []
     for i in res:
@@ -73,5 +67,17 @@ def compute(request, handles):
     content['handle1'] = handle1
     content['handle2'] = handle2
 
+    content['my_dict3'] = my_dict3
+    content['my_dict4'] = my_dict4
 
-    return render(request, 'compare/compute.html', content)
+    content['output_rating_stats'] = get_rating_chart(handle1, handle2, my_dict3, my_dict4).render()
+
+    content['output_tags'] = get_tags_chart(handle1, handle2, my_dict1, my_dict2).render()
+    
+    content['output_levels'] = get_levels_chart(handle1, handle2, my_dict1, my_dict2).render()
+
+    content['output_problem_ratings'] = get_problem_ratings_chart(handle1, handle2, my_dict1, my_dict2).render()
+
+    content['common_problems_solved'] = get_common_problems(handle1, handle2)
+
+    return render(request, 'compare/compute.html', content) 

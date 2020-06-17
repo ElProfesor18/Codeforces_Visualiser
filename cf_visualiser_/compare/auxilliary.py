@@ -246,7 +246,7 @@ def get_common_contests(handle1, handle2):
         res.append((i, mydict1[i][0], mydict1[i][1], mydict2[i][1]))
     
     return res
-
+ 
 def get_rating_stats(handle1, handle2):
     url = 'https://codeforces.com/api/user.rating?handle='
 
@@ -262,11 +262,17 @@ def get_rating_stats(handle1, handle2):
     rating_id1 = []
     rating_id2 = []
 
+    rank_id1 = []
+    rank_id2 = []
+
     if(dictr1['status'] == "OK"):
         tdict1 = json_normalize(dictr1['result'])
 
         for i in tdict1['newRating']:
             rating_id1.append(i)
+
+        for i in tdict1['rank']:
+            rank_id1.append(i)
 
 
     if(dictr2['status'] == "OK"):
@@ -274,6 +280,9 @@ def get_rating_stats(handle1, handle2):
 
         for i in tdict2['newRating']:
             rating_id2.append(i)
+
+        for i in tdict2['rank']:
+            rank_id2.append(i)
     
     my_dict1['CurrRating'] = rating_id1[(len(rating_id1)-1)]
     my_dict2['CurrRating'] = rating_id2[(len(rating_id2)-1)]
@@ -281,14 +290,313 @@ def get_rating_stats(handle1, handle2):
     rating_id1.sort()
     rating_id2.sort()
 
+    rank_id1.sort()
+    rank_id2.sort()
+
     my_dict1['MinRating'] = rating_id1[0]
     my_dict1['MaxRating'] = rating_id1[len(rating_id1)-1]
-
 
     my_dict2['MinRating'] = rating_id2[0]
     my_dict2['MaxRating'] = rating_id2[len(rating_id2)-1]  
 
-    print(my_dict1)
-    print(my_dict2)  
+    my_dict1['BestRank'] = rank_id1[0]
+    my_dict1['WorstRank'] = rank_id1[len(rank_id1)-1]
 
-    # We need to work on this.
+    my_dict2['BestRank'] = rank_id2[0]
+    my_dict2['WorstRank'] = rank_id2[len(rank_id2)-1]
+
+    return (my_dict1, my_dict2) 
+
+def get_rating_chart(handle1, handle2, my_dict1, my_dict2):
+    dataSource = OrderedDict()
+
+    chartConfig = OrderedDict()
+    chartConfig["caption"] = "Rating Stats Comparison"
+    chartConfig["xAxisName"] = "Handles"
+    chartConfig["yAxisName"] = "Rating"
+    chartConfig["theme"] = "fusion"
+    chartConfig["drawcrossline"] = "1"
+
+    # The `chartData` dict contains key-value pairs data
+    chartData = OrderedDict()
+
+    dataSource["chart"] = chartConfig
+    dataSource["categories"] = []
+    dataSource["dataset"] = []
+
+    fields = ['Current Rating', 'Max Rating', 'Min Rating']
+
+    cat_list = []
+    for i in fields:
+        cat_list.append({"label" : i})
+
+    dataSource["categories"].append({"category" : cat_list})
+    
+    series_name_list = [handle1, handle2]
+
+    cnt = 0
+    for i in series_name_list:
+        tdict = {}
+        tdict['seriesname'] = i
+
+        if cnt==0:
+            data = []
+            data.append({'value' : int(my_dict1['CurrRating'])})
+            data.append({'value' : int(my_dict1['MaxRating'])})
+            data.append({'value' : int(my_dict1['MinRating'])})
+        
+        else:
+            data = []
+            data.append({'value' : int(my_dict2['CurrRating'])})
+            data.append({'value' : int(my_dict2['MaxRating'])})
+            data.append({'value' : int(my_dict2['MinRating'])})
+
+        tdict['data'] = data
+        dataSource["dataset"].append(tdict)
+        cnt += 1
+
+    chartObj = fusioncharts.FusionCharts( 'mscolumn2d', 'rating_stats', '600', '400', 'rating_stats_chart', 'json', dataSource)
+
+    return chartObj
+
+def get_tags_chart(handle1, handle2, my_dict1, my_dict2):
+    dataSource = OrderedDict()
+
+    chartConfig = OrderedDict()
+    chartConfig["caption"] = "Problem Tags Comparison"
+    chartConfig["xAxisName"] = "Tags"
+    chartConfig["yAxisName"] = "Number of Problems"
+    chartConfig["theme"] = "fusion"
+    chartConfig["drawcrossline"] = "1"
+
+    # The `chartData` dict contains key-value pairs data
+    chartData = OrderedDict()
+
+    dataSource["chart"] = chartConfig
+    dataSource["categories"] = []
+    dataSource["dataset"] = []
+
+    fields = []
+    for i in my_dict1['ProblemTags'].keys():
+        fields.append(i)
+
+    for i in my_dict2['ProblemTags'].keys():
+        fields.append(i)
+    
+    fields = list(set(fields))
+    fields.sort()
+
+    tag_list = []
+    for i in fields:
+        tag_list.append({"label" : i})
+
+    dataSource["categories"].append({"category" : tag_list})
+    
+    series_name_list = [handle1, handle2]
+
+    cnt = 0
+    for i in series_name_list:
+        tdict = {}
+        tdict['seriesname'] = i
+
+        if cnt==0:
+            data = []
+
+            for i in fields:
+                if i in my_dict1['ProblemTags']:
+                    data.append({'value' : int(my_dict1['ProblemTags'][i])})
+                else:
+                    data.append({'value' : 0})
+        
+        else:
+            data = []
+            
+            for i in fields:
+                if i in my_dict2['ProblemTags']:
+                    data.append({'value' : int(my_dict2['ProblemTags'][i])})
+                else:
+                    data.append({'value' : 0})
+
+        tdict['data'] = data
+        dataSource["dataset"].append(tdict)
+        cnt += 1
+
+    chartObj = fusioncharts.FusionCharts( 'mscolumn2d', 'tags_stats', '1000', '800', 'tags_stats_chart', 'json', dataSource)
+
+    return chartObj
+
+def get_levels_chart(handle1, handle2, my_dict1, my_dict2):
+    dataSource = OrderedDict()
+
+    chartConfig = OrderedDict()
+    chartConfig["caption"] = "Problem Levels Comparison"
+    chartConfig["xAxisName"] = "Levels"
+    chartConfig["yAxisName"] = "Number of Problems"
+    chartConfig["theme"] = "fusion"
+    chartConfig["drawcrossline"] = "1"
+
+    # The `chartData` dict contains key-value pairs data
+    chartData = OrderedDict()
+
+    dataSource["chart"] = chartConfig
+    dataSource["categories"] = []
+    dataSource["dataset"] = []
+
+    fields = []
+    for i in my_dict1['ProblemIndex'].keys():
+        fields.append(i)
+
+    for i in my_dict2['ProblemIndex'].keys():
+        fields.append(i)
+    
+    fields = list(set(fields))
+    fields.sort()
+
+    levels_list = []
+    for i in fields:
+        levels_list.append({"label" : i})
+    
+    dataSource["categories"].append({"category" : levels_list})
+    
+    series_name_list = [handle1, handle2]
+
+    cnt = 0
+    for i in series_name_list:
+        tdict = {}
+        tdict['seriesname'] = i
+
+        if cnt==0:
+            data = []
+
+            for i in fields:
+                if i in my_dict1['ProblemIndex']:
+                    key = int(my_dict1['ProblemIndex'][i])
+                    data.append({'value' : key})
+                else:
+                    data.append({'value' : 0})
+        
+        else:
+            data = []
+            
+            for i in fields:
+                if i in my_dict2['ProblemIndex']:
+                    key = int(my_dict2['ProblemIndex'][i])
+                    data.append({'value' : key})
+                else:
+                    data.append({'value' : 0})
+
+        tdict['data'] = data
+        dataSource["dataset"].append(tdict)
+        cnt += 1
+
+    chartObj = fusioncharts.FusionCharts( 'mscolumn2d', 'levels_stats', '1000', '800', 'levels_stats_chart', 'json', dataSource)
+
+    return chartObj
+
+def get_problem_ratings_chart(handle1, handle2, my_dict1, my_dict2):
+    dataSource = OrderedDict()
+
+    chartConfig = OrderedDict()
+    chartConfig["caption"] = "Problem Ratings Comparison"
+    chartConfig["xAxisName"] = "Ratings"
+    chartConfig["yAxisName"] = "Number of Problems"
+    chartConfig["theme"] = "fusion"
+    chartConfig["drawcrossline"] = "1"
+
+    # The `chartData` dict contains key-value pairs data
+    chartData = OrderedDict()
+
+    dataSource["chart"] = chartConfig
+    dataSource["categories"] = []
+    dataSource["dataset"] = []
+
+    fields = []
+    for i in my_dict1['ProblemRatings'].keys():
+        fields.append(i)
+
+    for i in my_dict2['ProblemRatings'].keys():
+        fields.append(i)
+    
+    fields = list(set(fields))
+    fields.sort()
+
+    levels_list = []
+    for i in fields:
+        levels_list.append({"label" : str(i)})
+    
+
+    dataSource["categories"].append({"category" : levels_list})
+    
+    series_name_list = [handle1, handle2]
+
+    cnt = 0
+    for i in series_name_list:
+        tdict = {}
+        tdict['seriesname'] = i
+
+        if cnt==0:
+            data = []
+
+            for i in fields:
+                if i in my_dict1['ProblemRatings']:
+                    key = int(my_dict1['ProblemRatings'][i])
+                    data.append({'value' : key})
+                else:
+                    data.append({'value' : 0})
+        
+        else:
+            data = []
+            
+            for i in fields:
+                if i in my_dict2['ProblemRatings']:
+                    key = int(my_dict2['ProblemRatings'][i])
+                    data.append({'value' : key})
+                else:
+                    data.append({'value' : 0})
+
+        tdict['data'] = data
+        dataSource["dataset"].append(tdict)
+        cnt += 1
+
+    chartObj = fusioncharts.FusionCharts( 'mscolumn2d', 'problem_ratings_stats', '1000', '800', 'problem_ratings_stats_chart', 'json', dataSource)
+
+    return chartObj
+
+def get_common_problems(handle1, handle2):
+    url1 = 'https://codeforces.com/api/user.status?handle=' + handle1
+
+    r1 = requests.get(url1)
+    dictr1 = r1.json()
+
+    url2 = 'https://codeforces.com/api/user.status?handle=' + handle2
+
+    r2 = requests.get(url2)
+    dictr2 = r2.json()
+
+    problems_id1 = []
+    problems_id2 = []
+
+    if(dictr1['status'] == "OK"):
+        tdict = json_normalize(dictr1['result'])
+
+        cnt = 0
+        for i in tdict['problem.contestId']:
+            problems_id1.append((i, tdict['problem.index'][cnt]))
+            cnt += 1
+
+    if(dictr2['status'] == "OK"):
+        tdict = json_normalize(dictr2['result'])
+
+        print(tdict.keys())
+
+        cnt = 0
+        for i in tdict['problem.contestId']:
+            problems_id2.append((i, tdict['problem.index'][cnt]))
+            cnt += 1
+    
+    problems_id1 = list(set(problems_id1))
+    problems_id2 = list(set(problems_id2))
+
+    common = intersection(problems_id1, problems_id2)
+
+    return len(common)

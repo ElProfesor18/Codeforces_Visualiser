@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import contactUs
 from .models import enquiry
 
+from django.core.mail import send_mail
+from django.conf import settings
+
 def index(request):
     return render(request,'login/index.html')
 
@@ -79,9 +82,23 @@ def contact_us(request):
             t = enquiry(name=name, email=email, subject=subject, message=message, copy=copy)
             t.save()
 
+            mail_subject = 'Regarding the enquiry made on Codeforces Visualiser.'
+            mail_message = ' It means a world to us. We will get back to you shortly.'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [email,]
+            send_mail( subject, message, email_from, recipient_list )
+
             return index(request)
 
     else:
         form = contactUs()
 
     return render(request, 'login/contact_us.html', {'form' : form})
+
+def email(request):
+    subject = 'Regarding the enquiry made on Codeforces Visualiser.'
+    message = ' It means a world to us. We will get back to you shortly.'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email,]
+    send_mail( subject, message, email_from, recipient_list )
+    return redirect('redirect to a new page')

@@ -125,3 +125,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static'),
 STATIC_FILES_DIRS = [
     os.path.join(BASE_DIR, 'cf_visualiser/static'),
     ]
+
+# Email Settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'jay.sable311@gmail.com'
+EMAIL_HOST_PASSWORD = 'hbsorwdmdtzzhwpd'
+EMAIL_USE_TLS = True
