@@ -10,6 +10,17 @@ from Cf_API_Interaction.Problem_Stats import *
 from .auxilliary import *
 
 # Create your views here.
+def is_valid(handle):
+    Handle = handle
+    url = 'https://codeforces.com/api/user.info?handles=' + Handle
+
+    r = requests.get(url)
+    dictr = r.json()
+
+    # print(dictr)
+
+    return dictr['status'] == "OK"
+
 def compare(request):
     
     if request.method == 'POST':
@@ -19,8 +30,11 @@ def compare(request):
             handle1 = form.cleaned_data['name1']
             handle2 = form.cleaned_data['name2']
 
-            print(handle1)
-            print(handle2)
+            if not is_valid(handle1):   
+                return render(request, 'invalid_handle_compare.html')
+
+            if not is_valid(handle2):
+                return render(request, 'invalid_handle_compare.html')
 
             para = handle1 + '&' + handle2
             print(para)

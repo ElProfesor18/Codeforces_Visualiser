@@ -15,6 +15,18 @@ from .auxilliary import *
 from .TimeTable import *
 
 # Create your views here.
+
+def is_valid(handle):
+    Handle = handle
+    url = 'https://codeforces.com/api/user.info?handles=' + Handle
+
+    r = requests.get(url)
+    dictr = r.json()
+
+    # print(dictr)
+
+    return dictr['status'] == "OK"
+
 def search(request):
     if request.method == 'POST':
         form = search_handle(request.POST)
@@ -22,7 +34,9 @@ def search(request):
         if form.is_valid():
             handle = form.cleaned_data['name']
 
-            print(handle)
+            if not is_valid(handle):
+                return render(request, 'invalid_handle_search.html')
+
             return HttpResponseRedirect('/search/%s' %handle)
 
     else:
@@ -55,3 +69,8 @@ def time_table(request):
     return render(request, "visualise/timetable.html", {"cols" : fcd})
 
      
+
+
+
+
+

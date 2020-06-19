@@ -17,6 +17,15 @@ def contest_stats(handle):
         result = {}
         result['NoOfContests'] = len(tdict)
 
+        if result['NoOfContests'] == 0:
+            result['MaxUp'] = 0
+            result['MaxDown'] = 0
+
+            result['BestRank'] = 0
+            result['WorstRank'] = 0
+
+            return result
+
         delta = []
         rank = []
 

@@ -27,7 +27,7 @@ Affil.: {{about.Affiliation}}
 <h3>Contest Stats</h3>
 Number of Contests: {{contest_stats.NoOfContests}}
 <br>
-
+{% if contest_stats.NoOfContests %}
 Best Rank: {{contest_stats.BestRank.0}} ({{contest_stats.BestRank.1}})
 <br>
 
@@ -39,6 +39,7 @@ Max. Up: {{contest_stats.MaxUp.0}} ({{contest_stats.MaxUp.1}})
 
 Max. Down: {{contest_stats.MaxDown.0}} ({{contest_stats.MaxDown.1}})
 <br>
+{% endif %}
 
 <h3>Problem Stats</h3>
 Tried : {{problem_stats.Tried}}
